@@ -3,6 +3,8 @@
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.From.html
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a hint.
 
+use std::default;
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -35,10 +37,24 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let (name, age) = match s.split_once(",") {
+            Some ((name, age)) => (name, age),
+            _ => return Person::default(),
+        };
+
+        if let Ok(age) = age.parse::<usize>(){
+            if name.len() > 0 {
+                return Person {
+                    name: name.to_string(),
+                    age: age
+                }
+            }
+        };
+
+        Person::default()
     }
 }
 
